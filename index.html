@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎄 NaviWeb - Feliz Navidad 2025 🎄</title>
+    <meta name="description" content="Página navideña interactiva con deseos, animaciones y mucha magia navideña. ¡Comparte tus deseos de Navidad!">
+    <meta name="keywords" content="navidad, christmas, deseos, felicitaciones, 2025">
+    <meta name="author" content="NaviWeb">
+    
+    <!-- Open Graph para redes sociales -->
+    <meta property="og:title" content="NaviWeb - Feliz Navidad 2025">
+    <meta property="og:description" content="Comparte tus deseos navideños y disfruta de una experiencia interactiva llena de magia">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎄</text></svg>">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+
+
+    <!-- Navegación moderna -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-logo">🎄</span>
+                <span class="nav-title">NaviWeb</span>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Inicio</a></li>
+                <li><a href="#about" class="nav-link">Acerca</a></li>
+                <li><a href="#wishes" class="nav-link">Deseos</a></li>
+                <li><a href="#contact" class="nav-link">Contacto</a></li>
+                <li><button id="music-toggle" class="music-btn" title="Música navideña">🎵</button></li>
+            </ul>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+      
+
+    <section class="hero" id="home">
+        <div class="snow-container">
+            <div class="snowflake">❄</div>
+            <div class="snowflake">❅</div>
+            <div class="snowflake">❆</div>
+            <div class="snowflake">❄</div>
+            <div class="snowflake">❅</div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="main-title">🎄 ¡Feliz Navidad! 🎄</h1>
+                <p class="greeting" id="titulo">¡Hola visitante!</p>
+                <p class="subtitle">Que esta Navidad esté llena de alegría, amor y momentos especiales</p>
+                <div class="countdown-container">
+                    <h3>⏰ Cuenta regresiva para Navidad:</h3>
+                    <div id="countdown" class="countdown"></div>
+                </div>
+                <div class="hero-buttons">
+                    <button class="button primary" id="change-name-btn">✨ Personalizar Saludo</button>
+                    <button class="button secondary" onclick="document.getElementById('info').scrollIntoView({behavior: 'smooth'})">📖 Saber Más</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="img/navidadarb1.svg" alt="Árbol de Navidad" class="christmas-tree">
+                <div class="lights"></div>
+            </div>
+        </div>
+    </section>
+    <!-- Sección Acerca de -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">La Magia de la Navidad</h2>
+                <p class="section-subtitle">Descubre las tradiciones que hacen especial esta época del año</p>
+            </div>
+            
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="card-icon">🎄</div>
+                    <h3 class="card-title">Tradición Familiar</h3>
+                    <p class="card-description">La Navidad une a las familias en momentos especiales llenos de amor, gratitud y celebración.</p>
+                </div>
+                
+                <div class="about-card">
+                    <div class="card-icon">🎁</div>
+                    <h3 class="card-title">Generosidad</h3>
+                    <p class="card-description">El espíritu navideño nos inspira a dar y compartir, creando vínculos más fuertes con nuestros seres queridos.</p>
+                </div>
+                
+                <div class="about-card">
+                    <div class="card-icon">✨</div>
+                    <h3 class="card-title">Esperanza</h3>
+                    <p class="card-description">Cada Navidad trae consigo la promesa de nuevos comienzos y la esperanza de un futuro mejor.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Sección de Deseos -->
+    <section class="wishes" id="wishes">
+        <div class="container">
+            <!-- Estadísticas -->
+            <div class="stats-section" id="stats-display">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🌟</div>
+                        <div class="stat-content">
+                            <span class="stat-number" id="total-wishes">0</span>
+                            <span class="stat-label">Deseos Enviados</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <span class="stat-number" id="total-visitors">0</span>
+                            <span class="stat-label">Visitantes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-header">
+                <h2 class="section-title">Comparte tu Deseo Navideño</h2>
+                <p class="section-subtitle">Tu deseo se unirá a miles de otros alrededor del mundo</p>
+            </div>
+            
+            <!-- Formulario de deseos -->
+            <div class="wish-form-container">
+                <div class="wish-form">
+                    <textarea 
+                        id="wish-text" 
+                        placeholder="Escribe tu deseo navideño aquí... ¿Qué esperas para este 2025?" 
+                        maxlength="500"
+                        rows="4"
+                    ></textarea>
+                    <div class="form-footer">
+                        <span class="char-count"><span id="char-count">0</span>/500</span>
+                        <button id="add-wish" class="btn btn-primary">
+                            <span class="btn-text">Enviar Deseo</span>
+                            <span class="btn-icon">✨</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Lista de deseos -->
+            <div class="wishes-section">
+                <h3 class="wishes-title">Deseos de la Comunidad</h3>
+                <div class="wishes-grid" id="wishes-container">
+                    <!-- Los deseos se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="footer-logo-icon">🎄</span>
+                        <span class="footer-logo-text">NaviWeb</span>
+                    </div>
+                    <p class="footer-description">Compartiendo la magia de la Navidad desde 2025</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" title="Facebook">
+                            <img src="icons/facebook-circle-logo-24.png" alt="Facebook">
+                        </a>
+                        <a href="#" class="social-link" title="Twitter">
+                            <img src="icons/twitter-logo-24.png" alt="Twitter">
+                        </a>
+                        <a href="#" class="social-link" title="LinkedIn">
+                            <img src="icons/linkedin-square-logo-24.png" alt="LinkedIn">
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Navegación</h4>
+                        <ul>
+                            <li><a href="#home">Inicio</a></li>
+                            <li><a href="#about">Acerca</a></li>
+                            <li><a href="#wishes">Deseos</a></li>
+                            <li><a href="#contact">Contacto</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Contacto</h4>
+                        <ul>
+                            <li>naviweb@example.com</li>
+                            <li>+1 (555) 123-4567</li>
+                            <li>Polo Norte, Casa de Santa</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 NaviWeb - Hecho con ❤️ y magia navideña ✨</p>
+            </div>
+        </div>
+        
+        <!-- Botón volver arriba -->
+        <button id="back-to-top" class="back-to-top" title="Volver arriba">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m18 15-6-6-6 6"/>
+            </svg>
+        </button>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
