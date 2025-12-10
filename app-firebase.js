@@ -59,9 +59,12 @@ function initializeNaviWebApp() {
 
 // Cargar deseos desde Firebase
 async function loadWishesFromFirebase() {
+    console.log('🔥 Intentando cargar deseos desde Firebase...');
     try {
         const q = query(collection(db, "wishes"), orderBy("timestamp", "desc"));
+        console.log('📊 Query creado, obteniendo datos...');
         const querySnapshot = await getDocs(q);
+        console.log('📦 Datos obtenidos:', querySnapshot.size, 'documentos');
         
         const wishes = [];
         querySnapshot.forEach((doc) => {
@@ -75,24 +78,32 @@ async function loadWishesFromFirebase() {
         displayWishes(wishes);
         updateGlobalStats();
         
+        console.log('✅ Deseos cargados exitosamente:', wishes.length);
         showNotification(`✨ ${wishes.length} deseos cargados de nuestra comunidad`, 'success');
         
     } catch (error) {
-        console.error("Error cargando deseos:", error);
-        showNotification('⚠️ Error cargando deseos. Usando modo local.', 'warning');
+        console.error("❌ Error cargando deseos:", error);
+        console.log('🔄 Intentando con localStorage como fallback...');
+        showNotification('⚠️ Error conectando con Firebase. Usando modo local.', 'warning');
         loadWishesFromLocal(); // Fallback a localStorage
     }
 }
 
 // Agregar deseo a Firebase
 async function addWish() {
+    console.log('🎁 Intentando agregar deseo a Firebase...');
     const wishInput = document.getElementById('wish-text');
     const nameInput = document.getElementById('wish-name');
     
-    if (!wishInput || !nameInput) return;
+    if (!wishInput || !nameInput) {
+        console.error('❌ No se encontraron los campos del formulario');
+        return;
+    }
     
     const wishText = wishInput.value.trim();
     const wishName = nameInput.value.trim() || 'Anónimo';
+    
+    console.log('📝 Datos del deseo:', { wishName, wishText: wishText.substring(0, 50) + '...' });
     
     if (!wishText) {
         showNotification('Por favor escribe tu deseo 🎄', 'warning');
@@ -108,13 +119,16 @@ async function addWish() {
         name: wishName,
         wish: wishText,
         timestamp: new Date(),
-        date: new Date().toLocaleDateString('es-ES'),
-        ip: await getClientIP() // Para estadísticas (opcional)
+        date: new Date().toLocaleDateString('es-ES')
     };
     
+    console.log('📦 Objeto del deseo preparado:', newWish);
+    
     try {
+        console.log('🔥 Enviando a Firebase...');
         // Guardar en Firebase
         const docRef = await addDoc(collection(db, "wishes"), newWish);
+        console.log('✅ Deseo guardado con ID:', docRef.id);
         
         // Agregar a la vista local
         newWish.id = docRef.id;
@@ -126,7 +140,8 @@ async function addWish() {
         wishInput.value = '';
         nameInput.value = '';
         
-        showNotification(`🌟 ¡Tu deseo se compartió con el mundo! Visible para ${wishesData.length} personas`, 'success');
+        showNotification(`🌟 ¡Tu deseo se compartió con el mundo! Visible para todos`, 'success');
+        console.log('🎉 Proceso completado exitosamente');
         
         // Scroll a la lista de deseos
         const wishesSection = document.getElementById('wishes-display');
@@ -135,8 +150,24 @@ async function addWish() {
         }
         
     } catch (error) {
-        console.error("Error agregando deseo:", error);
-        showNotification('❌ Error enviando deseo. Inténtalo de nuevo.', 'error');
+        console.error("❌ Error agregando deseo a Firebase:", error);
+        console.log('📋 Detalles del error:', error.message);
+        
+        // Fallback a localStorage
+        console.log('🔄 Guardando en localStorage como fallback...');
+        let localWishes = JSON.parse(localStorage.getItem('naviweb_wishes') || '[]');
+        newWish.id = Date.now();
+        localWishes.unshift(newWish);
+        localStorage.setItem('naviweb_wishes', JSON.stringify(localWishes));
+        
+        wishesData = localWishes;
+        displayWishes(wishesData);
+        
+        // Limpiar formulario
+        wishInput.value = '';
+        nameInput.value = '';
+        
+        showNotification('❌ Error con Firebase. Deseo guardado localmente.', 'warning');
     }
 }
 
