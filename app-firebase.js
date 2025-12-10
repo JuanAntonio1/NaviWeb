@@ -24,7 +24,7 @@ let wishesData = [];
 
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
+    initializeNaviWebApp();
     setupEventListeners();
     startCountdown();
     animateOnScroll();
@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
     createSnowfall();
 });
 
-// Función principal de inicialización
-function initializeApp() {
+// Función principal de inicialización (renombrada para evitar conflictos)
+function initializeNaviWebApp() {
     console.log('🎄 ¡Bienvenido a NaviWeb con Firebase! 🎄');
     
     // Cargar nombre guardado del localStorage
