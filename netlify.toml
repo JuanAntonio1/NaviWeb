@@ -2,11 +2,11 @@
   publish = "."
   
 [dev]
-  command = "echo 'Serving static files'"
+  command = "echo 'Serving Firebase version'"
   
 [[redirects]]
   from = "/*"
-  to = "/index-netlify.html"
+  to = "/index.html"
   status = 200
 
 [[headers]]
