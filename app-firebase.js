@@ -239,9 +239,9 @@ function displayWishes(wishes) {
     
     console.log('📝 Generando HTML para', wishes.length, 'deseos');
     const html = wishes.map((wish, index) => `
-        <div class="wish-item" style="animation-delay: ${index * 0.1}s">
-            <p>${wish.wish}</p>
-            <small>🌟 ${wish.name} - ${wish.date} 🌍 Global</small>
+        <div style="background: white; padding: 20px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; border-left: 4px solid #0f766e;">
+            <p style="font-style: italic; margin-bottom: 10px;">${wish.wish}</p>
+            <small style="color: #666;">🌟 ${wish.name} - ${wish.date} 🌍 Global</small>
         </div>
     `).join('');
     
