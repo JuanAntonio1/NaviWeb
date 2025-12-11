@@ -1,24 +1,4 @@
-// Versión simplificada - Usando localStorage
-// (Firebase imports comentados por ahora)
-// import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-// import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-// Configuración de Firebase (comentada por ahora)
-/*
-const firebaseConfig = {
-  apiKey: "AIzaSyBt41pgOyliuLmm62Ao2GzQNpdSCoeGEAM",
-  authDomain: "naviweb-c101c.firebaseapp.com",
-  projectId: "naviweb-c101c",
-  storageBucket: "naviweb-c101c.firebasestorage.app",
-  messagingSenderId: "923542574150",
-  appId: "1:923542574150:web:f7bb623a49927b494ce647"
-};
-
-// Inicializar Firebase
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseApp);
-*/
-
+// Versión simplificada - Solo localStorage
 // Variables globales
 let userName = '';
 let userLastName = '';
@@ -31,78 +11,37 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     startCountdown();
     animateOnScroll();
-    loadWishesFromLocal(); // Usar localStorage por ahora
+    loadWishesFromLocal(); // Usar localStorage
     setupNavbarScroll();
     createSnowfall();
 });
 
-// Función principal de inicialización (renombrada para evitar conflictos)
+// Función principal de inicialización
 function initializeNaviWebApp() {
-    console.log('🎄 ¡Bienvenido a NaviWeb con Firebase! 🎄');
-    
+    console.log('🎄 ¡Bienvenido a NaviWeb! 🎄');
+
     // Cargar nombre guardado del localStorage
     userName = localStorage.getItem('naviweb_username') || '';
     userLastName = localStorage.getItem('naviweb_userlastname') || '';
-    
+
     // Configurar saludo inicial
     updateGreeting();
-    
+
     setTimeout(() => {
         if (!userName) {
             askUserName();
         }
     }, 2000);
-    
+
     // Configurar animaciones iniciales
     setupInitialAnimations();
-    
+
     // Configurar contador de caracteres
     setupCharCounter();
 }
 
-// Cargar deseos desde Firebase (comentado por ahora)
-/*
-async function loadWishesFromFirebase() {
-    console.log('🔥 Intentando cargar deseos desde Firebase...');
-    console.log('📍 Proyecto Firebase:', firebaseConfig.projectId);
-    try {
-        const q = query(collection(db, "wishes"), orderBy("timestamp", "desc"));
-        console.log('📊 Query creado, obteniendo datos...');
-        const querySnapshot = await getDocs(q);
-        console.log('📦 Datos obtenidos:', querySnapshot.size, 'documentos');
-
-        if (querySnapshot.size === 0) {
-            console.log('⚠️ No hay deseos en la base de datos');
-        }
-
-        const wishes = [];
-        querySnapshot.forEach((doc) => {
-            console.log('📄 Documento:', doc.id, doc.data());
-            wishes.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
-
-        wishesData = wishes;
-        displayWishes(wishes);
-        updateGlobalStats();
-
-        console.log('✅ Deseos cargados exitosamente:', wishes.length);
-        showNotification(`✨ ${wishes.length} deseos cargados de nuestra comunidad`, 'success');
-
-    } catch (error) {
-        console.error("❌ Error cargando deseos:", error);
-        console.error("❌ Detalles del error:", error.code, error.message);
-        console.log('🔄 Intentando con localStorage como fallback...');
-        showNotification('⚠️ Error conectando con Firebase. Usando modo local.', 'warning');
-        loadWishesFromLocal(); // Fallback a localStorage
-    }
-}
-*/
-
 // Agregar deseo (versión simplificada con localStorage)
-async function addWish() {
+function addWish() {
     console.log('🎁 Intentando agregar deseo...');
     const wishInput = document.getElementById('wish-text');
     const nameInput = document.getElementById('wish-name');
@@ -153,54 +92,17 @@ async function addWish() {
     console.log('🎉 Proceso completado exitosamente');
 }
 
-// Obtener IP del cliente (para estadísticas)
-async function getClientIP() {
-    try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        return data.ip;
-    } catch (error) {
-        return 'unknown';
-    }
-}
-
-// Actualizar estadísticas globales
-async function updateGlobalStats() {
-    try {
-        // Estadísticas de deseos
-        const wishesCount = wishesData.length;
-        
-        // Estadísticas de visitantes únicos (por IP)
-        const uniqueIPs = [...new Set(wishesData.map(w => w.ip))];
-        const visitorsCount = Math.max(uniqueIPs.length, wishesCount);
-        
-        const totalWishesElement = document.getElementById('total-wishes');
-        const totalVisitorsElement = document.getElementById('total-visitors');
-        
-        if (totalWishesElement) {
-            animateNumber(totalWishesElement, 0, wishesCount, 1500);
-        }
-        
-        if (totalVisitorsElement) {
-            animateNumber(totalVisitorsElement, 0, visitorsCount, 1500);
-        }
-        
-    } catch (error) {
-        console.error("Error actualizando estadísticas:", error);
-    }
-}
-
-// Mostrar deseos (igual que antes pero con datos globales)
+// Mostrar deseos
 function displayWishes(wishes) {
     console.log('🎨 Intentando mostrar deseos:', wishes.length);
     const wishesContainer = document.getElementById('wishes-container');
     console.log('📦 Contenedor encontrado:', !!wishesContainer);
-    
+
     if (!wishesContainer) {
         console.error('❌ No se encontró el contenedor de deseos');
         return;
     }
-    
+
     if (wishes.length === 0) {
         console.log('📭 No hay deseos para mostrar');
         wishesContainer.innerHTML = `
@@ -211,28 +113,27 @@ function displayWishes(wishes) {
         `;
         return;
     }
-    
+
     console.log('📝 Generando HTML para', wishes.length, 'deseos');
     const html = wishes.map((wish, index) => `
         <div class="wish-item" style="animation-delay: ${index * 0.1}s">
             <p>${wish.wish}</p>
-            <small>🌟 ${wish.name} - ${wish.date} 🌍 Global</small>
+            <small>🌟 ${wish.name} - ${wish.date} 🌍 Local</small>
         </div>
     `).join('');
-    
+
     console.log('📄 HTML generado, asignando al contenedor');
     wishesContainer.innerHTML = html;
     console.log('✅ Deseos mostrados en la página');
-    console.log('📊 Contenedor después de asignar HTML:', wishesContainer.innerHTML.substring(0, 200) + '...');
 }
 
-// Fallback a localStorage si Firebase falla
+// Cargar deseos desde localStorage
 function loadWishesFromLocal() {
     try {
         const wishes = JSON.parse(localStorage.getItem('naviweb_wishes') || '[]');
         wishesData = wishes;
         displayWishes(wishes);
-        
+
         // Agregar indicador de modo local
         const wishesContainer = document.getElementById('wishes-container');
         if (wishesContainer && wishes.length > 0) {
@@ -249,9 +150,6 @@ function loadWishesFromLocal() {
     }
 }
 
-// Resto de funciones iguales que en app-netlify.js
-// (setupEventListeners, updateGreeting, createModal, etc.)
-
 // Configurar event listeners
 function setupEventListeners() {
     // Botón para cambiar nombre
@@ -259,24 +157,24 @@ function setupEventListeners() {
     if (personalizeBtn) {
         personalizeBtn.addEventListener('click', askUserName);
     }
-    
+
     // Botón de música
     const musicBtn = document.getElementById('music-toggle');
     if (musicBtn) {
         musicBtn.addEventListener('click', toggleMusic);
     }
-    
+
     // Hamburger menu para móviles
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.querySelector('.nav-menu');
-    
+
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
     }
-    
+
     // Cerrar menú al hacer clic en un enlace
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
@@ -285,33 +183,19 @@ function setupEventListeners() {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
             }
-            
+
             // Actualizar enlace activo
             navLinks.forEach(l => l.classList.remove('active'));
             e.target.classList.add('active');
         });
     });
-    
-    // Botón volver arriba
-    const backToTopBtn = document.getElementById('back-to-top');
-    if (backToTopBtn) {
-        backToTopBtn.addEventListener('click', scrollToTop);
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopBtn.classList.add('visible');
-            } else {
-                backToTopBtn.classList.remove('visible');
-            }
-        });
-    }
-    
+
     // Botón agregar deseo
     const addWishBtn = document.getElementById('add-wish');
     if (addWishBtn) {
         addWishBtn.addEventListener('click', addWish);
     }
-    
+
     // Enter en textarea para enviar deseo
     const wishTextarea = document.getElementById('wish-text');
     if (wishTextarea) {
@@ -321,41 +205,192 @@ function setupEventListeners() {
             }
         });
     }
-}
 
-// Crear efecto de nieve
-function createSnowfall() {
-    const snowContainer = document.getElementById('snow-container');
-    if (!snowContainer) return;
-    
-    for (let i = 0; i < 50; i++) {
-        const snowflake = document.createElement('div');
-        snowflake.className = 'snowflake';
-        snowflake.textContent = ['❄', '❅', '❆'][Math.floor(Math.random() * 3)];
-        
-        // Posición aleatoria
-        snowflake.style.left = Math.random() * 100 + '%';
-        snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        snowflake.style.animationDelay = Math.random() * 2 + 's';
-        
-        snowContainer.appendChild(snowflake);
+    // Botón volver arriba
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', scrollToTop);
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
     }
 }
 
-// Configurar contador de caracteres
+// Función para actualizar el saludo
+function updateGreeting() {
+    const greetingElement = document.getElementById('greeting');
+    if (greetingElement) {
+        if (userName) {
+            greetingElement.textContent = `¡Hola ${userName}!`;
+        } else {
+            greetingElement.textContent = '¡Feliz Navidad!';
+        }
+    }
+}
+
+// Función para pedir el nombre del usuario
+function askUserName() {
+    const modal = createModal(`
+        <h2>🎄 ¡Personaliza tu experiencia!</h2>
+        <p>¿Cómo te llamas?</p>
+        <input type="text" id="user-name-input" placeholder="Tu nombre" maxlength="20">
+        <div class="modal-buttons">
+            <button id="save-name" class="btn btn-primary">Guardar</button>
+            <button id="skip-name" class="btn btn-secondary">Omitir</button>
+        </div>
+    `);
+
+    document.getElementById('save-name').addEventListener('click', () => {
+        const nameInput = document.getElementById('user-name-input');
+        if (nameInput && nameInput.value.trim()) {
+            userName = nameInput.value.trim();
+            localStorage.setItem('naviweb_username', userName);
+            updateGreeting();
+        }
+        modal.remove();
+    });
+
+    document.getElementById('skip-name').addEventListener('click', () => {
+        modal.remove();
+    });
+}
+
+// Función para crear modal
+function createModal(content) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal">
+            ${content}
+        </div>
+    `;
+    document.body.appendChild(modal);
+    return modal;
+}
+
+// Función para mostrar notificaciones
+function showNotification(message, type = 'info') {
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <span class="notification-icon">
+            ${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : type === 'error' ? '❌' : 'ℹ️'}
+        </span>
+        <span class="notification-text">${message}</span>
+        <button class="notification-close">×</button>
+    `;
+
+    // Agregar al DOM
+    document.body.appendChild(notification);
+
+    // Mostrar con animación
+    setTimeout(() => notification.classList.add('show'), 100);
+
+    // Auto-remover después de 5 segundos
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
+
+    // Botón de cerrar
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    });
+}
+
+// Función para countdown
+function startCountdown() {
+    const countdownElement = document.getElementById('countdown');
+    if (!countdownElement) return;
+
+    function updateCountdown() {
+        const now = new Date();
+        const christmas = new Date(now.getFullYear(), 11, 25); // Diciembre 25
+
+        if (now > christmas) {
+            christmas.setFullYear(christmas.getFullYear() + 1);
+        }
+
+        const diff = christmas - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        countdownElement.innerHTML = `
+            <div class="countdown-item">
+                <span class="countdown-number">${days}</span>
+                <span class="countdown-label">días</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number">${hours}</span>
+                <span class="countdown-label">horas</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number">${minutes}</span>
+                <span class="countdown-label">min</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number">${seconds}</span>
+                <span class="countdown-label">seg</span>
+            </div>
+        `;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+}
+
+// Función para animaciones al hacer scroll
+function animateOnScroll() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observar elementos con clase 'animate-on-scroll'
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Función para configurar animaciones iniciales
+function setupInitialAnimations() {
+    // Agregar clase de animación a elementos iniciales
+    setTimeout(() => {
+        document.querySelectorAll('.hero-content, .hero-image, .section-header').forEach(el => {
+            el.classList.add('animate-in');
+        });
+    }, 500);
+}
+
+// Función para configurar contador de caracteres
 function setupCharCounter() {
     const textarea = document.getElementById('wish-text');
     const charCount = document.getElementById('char-count');
-    
+
     if (textarea && charCount) {
         textarea.addEventListener('input', function() {
             charCount.textContent = this.value.length;
-            
+
             // Cambiar color según la longitud
             if (this.value.length > 450) {
                 charCount.style.color = 'var(--secondary-color)';
-            } else if (this.value.length > 400) {
-                charCount.style.color = 'var(--accent-color)';
             } else {
                 charCount.style.color = 'var(--gray-500)';
             }
@@ -363,219 +398,25 @@ function setupCharCounter() {
     }
 }
 
-// Función para animar números
-function animateNumber(element, start, end, duration) {
-    if (!element) return;
-    
-    const startTime = performance.now();
-    const startValue = start;
-    const endValue = end;
-    
-    function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        const currentValue = Math.floor(startValue + (endValue - startValue) * easeOutQuart(progress));
-        element.textContent = currentValue;
-        
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        }
-    }
-    
-    requestAnimationFrame(update);
+// Función para toggle de música
+function toggleMusic() {
+    // Implementación básica - puedes expandir esto
+    showNotification('🎵 Función de música próximamente', 'info');
 }
 
-// Función de easing
-function easeOutQuart(t) {
-    return 1 - Math.pow(1 - t, 4);
-}
-
-// Pedir nombre al usuario
-function askUserName() {
-    const modal = createModal();
-    document.body.appendChild(modal);
-    
-    // Mostrar modal con animación
-    setTimeout(() => {
-        modal.style.opacity = '1';
-        modal.querySelector('.modal-content').style.transform = 'translateY(0)';
-    }, 10);
-    
-    const firstNameInput = modal.querySelector('#modal-first-name');
-    const lastNameInput = modal.querySelector('#modal-last-name');
-    const submitBtn = modal.querySelector('#modal-submit');
-    const cancelBtn = modal.querySelector('#modal-cancel');
-    
-    // Prellenar si ya hay datos
-    if (userName) firstNameInput.value = userName;
-    if (userLastName) lastNameInput.value = userLastName;
-    
-    submitBtn.addEventListener('click', () => {
-        const firstName = firstNameInput.value.trim();
-        const lastName = lastNameInput.value.trim();
-        
-        if (firstName) {
-            userName = firstName;
-            userLastName = lastName;
-            
-            // Guardar en localStorage
-            localStorage.setItem('naviweb_username', firstName);
-            if (lastName) {
-                localStorage.setItem('naviweb_userlastname', lastName);
-            }
-            
-            updateGreeting();
-            closeModal(modal);
-            showNotification(`¡Hola ${userName}! 🎄 ¡Bienvenido a nuestra comunidad navideña global!`, 'success');
-        } else {
-            showNotification('Por favor ingresa al menos tu primer nombre 😊', 'warning');
-        }
+// Función para scroll to top
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
     });
-    
-    cancelBtn.addEventListener('click', () => {
-        closeModal(modal);
-    });
-    
-    // Permitir enviar con Enter
-    [firstNameInput, lastNameInput].forEach(input => {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                submitBtn.click();
-            }
-        });
-    });
-    
-    // Enfocar en el primer input
-    setTimeout(() => firstNameInput.focus(), 100);
 }
 
-// Crear modal personalizado
-function createModal() {
-    const modalHTML = `
-        <div class="custom-modal" style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        ">
-            <div class="modal-content" style="
-                background: white;
-                padding: 40px;
-                border-radius: 20px;
-                max-width: 500px;
-                width: 90%;
-                text-align: center;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-                transform: translateY(-30px);
-                transition: transform 0.3s ease;
-            ">
-                <h2 style="color: var(--primary-color); margin-bottom: 20px; font-family: 'Dancing Script', cursive; font-size: 2.5rem;">
-                    🎄 ¡Únete a la Comunidad! 🎄
-                </h2>
-                <p style="color: #6c757d; margin-bottom: 30px; line-height: 1.6;">
-                    Comparte tu nombre para formar parte de nuestra comunidad navideña global:
-                </p>
-                <div style="margin-bottom: 20px;">
-                    <input type="text" id="modal-first-name" placeholder="Tu primer nombre *" style="
-                        width: 100%;
-                        padding: 15px;
-                        border: 2px solid #e9ecef;
-                        border-radius: 10px;
-                        font-size: 1rem;
-                        margin-bottom: 15px;
-                        transition: border-color 0.3s ease;
-                    ">
-                    <input type="text" id="modal-last-name" placeholder="Tu segundo nombre (opcional)" style="
-                        width: 100%;
-                        padding: 15px;
-                        border: 2px solid #e9ecef;
-                        border-radius: 10px;
-                        font-size: 1rem;
-                        transition: border-color 0.3s ease;
-                    ">
-                </div>
-                <div style="display: flex; gap: 15px; justify-content: center;">
-                    <button id="modal-submit" style="
-                        background: linear-gradient(135deg, #2d8a47, #c41e3a);
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 25px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: transform 0.3s ease;
-                    ">🌍 Unirme</button>
-                    <button id="modal-cancel" style="
-                        background: #6c757d;
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 25px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: transform 0.3s ease;
-                    ">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = modalHTML;
-    return tempDiv.firstElementChild;
-}
-
-// Cerrar modal
-function closeModal(modal) {
-    modal.style.opacity = '0';
-    modal.querySelector('.modal-content').style.transform = 'translateY(-30px)';
-    setTimeout(() => {
-        if (modal.parentNode) {
-            modal.parentNode.removeChild(modal);
-        }
-    }, 300);
-}
-
-// Actualizar saludo
-function updateGreeting() {
-    const greetingElement = document.getElementById('hero-greeting');
-    if (greetingElement) {
-        let greeting = '';
-        if (userName && userLastName) {
-            greeting = `🌍 ¡Hola ${userName} ${userLastName}! 🌍`;
-        } else if (userName) {
-            greeting = `🌍 ¡Hola ${userName}! 🌍`;
-        } else {
-            greeting = '¡Únete a la comunidad navideña global!';
-        }
-        
-        // Animación de texto
-        greetingElement.style.transform = 'scale(0.8)';
-        greetingElement.style.opacity = '0';
-        
-        setTimeout(() => {
-            greetingElement.textContent = greeting;
-            greetingElement.style.transition = 'all 0.3s ease';
-            greetingElement.style.transform = 'scale(1)';
-            greetingElement.style.opacity = '1';
-        }, 200);
-    }
-}
-
-// Configurar navbar scroll effect
+// Función para configurar navbar scroll
 function setupNavbarScroll() {
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
-    
+
     window.addEventListener('scroll', () => {
         if (window.scrollY > 100) {
             navbar.classList.add('scrolled');
@@ -585,108 +426,23 @@ function setupNavbarScroll() {
     });
 }
 
-// Función para mostrar notificaciones
-function showNotification(message, type = 'success') {
-    let notificationContainer = document.getElementById('notification-container');
-    if (!notificationContainer) {
-        notificationContainer = document.createElement('div');
-        notificationContainer.id = 'notification-container';
-        notificationContainer.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            pointer-events: none;
-        `;
-        document.body.appendChild(notificationContainer);
-    }
-    
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    
-    const bgColor = type === 'success' ? '#28a745' : type === 'warning' ? '#ffc107' : '#dc3545';
-    const textColor = type === 'warning' ? '#000' : '#fff';
-    
-    notification.style.cssText = `
-        background: ${bgColor};
-        color: ${textColor};
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-        transform: translateX(100%);
-        transition: all 0.3s ease;
-        pointer-events: auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        max-width: 350px;
-        font-weight: 500;
-    `;
-    
-    notification.innerHTML = `
-        <span>${message}</span>
-        <button onclick="this.parentNode.remove()" style="
-            background: none;
-            border: none;
-            color: ${textColor};
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        " onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">&times;</button>
-    `;
-    
-    notificationContainer.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 10);
-    
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 300);
-        }
-    }, 5000);
-}
+// Función para crear nieve
+function createSnowfall() {
+    const snowContainer = document.getElementById('snow-container');
+    if (!snowContainer) return;
 
-// Funciones adicionales necesarias
-function setupInitialAnimations() {
-    // Animaciones iniciales
-}
+    for (let i = 0; i < 50; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.textContent = ['❄', '❅', '❆'][Math.floor(Math.random() * 3)];
 
-function animateOnScroll() {
-    // Animaciones de scroll
-}
+        // Posición aleatoria
+        snowflake.style.left = Math.random() * 100 + '%';
+        snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        snowflake.style.animationDelay = Math.random() * 2 + 's';
 
-function startCountdown() {
-    // Countdown navideño
-}
-
-function toggleMusic() {
-    // Toggle de música
-}
-
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start'
-        });
+        snowContainer.appendChild(snowflake);
     }
 }
 
-console.log('🌍 NaviWeb con Firebase - ¡Deseos compartidos globalmente! 🎄');
+console.log('🌍 NaviWeb - ¡Feliz Navidad! 🎄');
