@@ -24,6 +24,7 @@ let wishesData = [];
 
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando NaviWeb con Firebase...');
     initializeNaviWebApp();
     setupEventListeners();
     startCountdown();
@@ -239,9 +240,9 @@ function displayWishes(wishes) {
     
     console.log('📝 Generando HTML para', wishes.length, 'deseos');
     const html = wishes.map((wish, index) => `
-        <div style="background: white; padding: 20px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; border-left: 4px solid #0f766e;">
-            <p style="font-style: italic; margin-bottom: 10px;">${wish.wish}</p>
-            <small style="color: #666;">🌟 ${wish.name} - ${wish.date} 🌍 Global</small>
+        <div class="wish-item" style="animation-delay: ${index * 0.1}s">
+            <p>${wish.wish}</p>
+            <small>🌟 ${wish.name} - ${wish.date} 🌍 Global</small>
         </div>
     `).join('');
     
@@ -249,7 +250,6 @@ function displayWishes(wishes) {
     wishesContainer.innerHTML = html;
     console.log('✅ Deseos mostrados en la página');
     console.log('📊 Contenedor después de asignar HTML:', wishesContainer.innerHTML.substring(0, 200) + '...');
-}
 }
 
 // Fallback a localStorage si Firebase falla
