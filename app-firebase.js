@@ -210,7 +210,7 @@ async function updateGlobalStats() {
 
 // Mostrar deseos (igual que antes pero con datos globales)
 function displayWishes(wishes) {
-    const wishesContainer = document.getElementById('wishes-list');
+    const wishesContainer = document.getElementById('wishes-container');
     if (!wishesContainer) return;
     
     if (wishes.length === 0) {
@@ -248,7 +248,7 @@ function loadWishesFromLocal() {
         displayWishes(wishes);
         
         // Agregar indicador de modo local
-        const wishesContainer = document.getElementById('wishes-list');
+        const wishesContainer = document.getElementById('wishes-container');
         if (wishesContainer && wishes.length > 0) {
             wishesContainer.insertAdjacentHTML('afterbegin', `
                 <div class="local-mode-notice">
