@@ -217,10 +217,17 @@ async function updateGlobalStats() {
 
 // Mostrar deseos (igual que antes pero con datos globales)
 function displayWishes(wishes) {
+    console.log('🎨 Intentando mostrar deseos:', wishes.length);
     const wishesContainer = document.getElementById('wishes-container');
-    if (!wishesContainer) return;
+    console.log('📦 Contenedor encontrado:', !!wishesContainer);
+    
+    if (!wishesContainer) {
+        console.error('❌ No se encontró el contenedor de deseos');
+        return;
+    }
     
     if (wishes.length === 0) {
+        console.log('📭 No hay deseos para mostrar');
         wishesContainer.innerHTML = `
             <div class="no-wishes">
                 <p>🎄 Aún no hay deseos navideños...</p>
@@ -230,21 +237,17 @@ function displayWishes(wishes) {
         return;
     }
     
-    wishesContainer.innerHTML = wishes.map((wish, index) => `
-        <div class="wish-card global-wish" style="animation-delay: ${index * 0.1}s">
-            <div class="wish-header">
-                <span class="wish-author">🌟 ${wish.name}</span>
-                <span class="wish-date">${wish.date}</span>
-                <span class="wish-global">🌍 Global</span>
-            </div>
-            <div class="wish-content">
-                ${wish.wish}
-            </div>
-            <div class="wish-footer">
-                <small class="wish-community">❤️ Compartido con la comunidad NaviWeb</small>
-            </div>
+    console.log('📝 Generando HTML para', wishes.length, 'deseos');
+    const html = wishes.map((wish, index) => `
+        <div class="wish-item" style="animation-delay: ${index * 0.1}s">
+            <p>${wish.wish}</p>
+            <small>🌟 ${wish.name} - ${wish.date} 🌍 Global</small>
         </div>
     `).join('');
+    
+    console.log('📄 HTML generado, asignando al contenedor');
+    wishesContainer.innerHTML = html;
+    console.log('✅ Deseos mostrados en la página');
 }
 
 // Fallback a localStorage si Firebase falla
