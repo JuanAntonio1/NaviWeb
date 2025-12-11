@@ -3,14 +3,14 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-// Tu configuración de Firebase - ACTUALIZA ESTOS VALORES CON LOS TUYOS DE FIREBASE CONSOLE
+// Tu configuración de Firebase - VALORES ACTUALIZADOS
 const firebaseConfig = {
-  apiKey: "TU_API_KEY_AQUI",  // Pega tu API Key aquí
-  authDomain: "TU_PROJECT_ID.firebaseapp.com",  // Pega tu Auth Domain aquí
-  projectId: "TU_PROJECT_ID",  // Pega tu Project ID aquí
-  storageBucket: "TU_PROJECT_ID.firebasestorage.app",  // Pega tu Storage Bucket aquí
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",  // Pega tu Messaging Sender ID aquí
-  appId: "TU_APP_ID"  // Pega tu App ID aquí
+  apiKey: "AIzaSyBt41pgOyliuLmm62Ao2GzQNpdSCoeGEAM",
+  authDomain: "naviweb-c101c.firebaseapp.com",
+  projectId: "naviweb-c101c",
+  storageBucket: "naviweb-c101c.firebasestorage.app",
+  messagingSenderId: "923542574150",
+  appId: "1:923542574150:web:f7bb623a49927b494ce647"
 };
 
 // Inicializar Firebase
