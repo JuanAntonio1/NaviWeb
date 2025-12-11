@@ -24,12 +24,12 @@ let wishesData = [];
 
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Iniciando NaviWeb con Firebase...');
+    console.log('🚀 Iniciando NaviWeb...');
     initializeNaviWebApp();
     setupEventListeners();
     startCountdown();
     animateOnScroll();
-    loadWishesFromFirebase(); // Cargar deseos globales
+    loadWishesFromLocal(); // Usar localStorage por ahora
     setupNavbarScroll();
     createSnowfall();
 });
@@ -97,86 +97,56 @@ async function loadWishesFromFirebase() {
     }
 }
 
-// Agregar deseo a Firebase
+// Agregar deseo (versión simplificada con localStorage)
 async function addWish() {
-    console.log('🎁 Intentando agregar deseo a Firebase...');
+    console.log('🎁 Intentando agregar deseo...');
     const wishInput = document.getElementById('wish-text');
     const nameInput = document.getElementById('wish-name');
-    
-    if (!wishInput || !nameInput) {
-        console.error('❌ No se encontraron los campos del formulario');
+
+    if (!wishInput) {
+        console.error('❌ No se encontró el campo del deseo');
         return;
     }
-    
+
     const wishText = wishInput.value.trim();
-    const wishName = nameInput.value.trim() || 'Anónimo';
-    
+    const wishName = nameInput ? nameInput.value.trim() || 'Anónimo' : 'Anónimo';
+
     console.log('📝 Datos del deseo:', { wishName, wishText: wishText.substring(0, 50) + '...' });
-    
+
     if (!wishText) {
         showNotification('Por favor escribe tu deseo 🎄', 'warning');
         return;
     }
-    
+
     if (wishText.length > 500) {
         showNotification('El deseo es muy largo. Máximo 500 caracteres 📝', 'warning');
         return;
     }
-    
+
     const newWish = {
         name: wishName,
         wish: wishText,
         timestamp: new Date(),
         date: new Date().toLocaleDateString('es-ES')
     };
-    
-    console.log('📦 Objeto del deseo preparado:', newWish);
-    
-    try {
-        console.log('🔥 Enviando a Firebase...');
-        // Guardar en Firebase
-        const docRef = await addDoc(collection(db, "wishes"), newWish);
-        console.log('✅ Deseo guardado con ID:', docRef.id);
-        
-        // Agregar a la vista local
-        newWish.id = docRef.id;
-        wishesData.unshift(newWish);
-        displayWishes(wishesData);
-        updateGlobalStats();
-        
-        // Limpiar formulario
-        wishInput.value = '';
-        nameInput.value = '';
-        
-        showNotification(`🌟 ¡Tu deseo se compartió con el mundo! Visible para todos`, 'success');
-        console.log('🎉 Proceso completado exitosamente');
-        
-        // Scroll a la lista de deseos
-        const wishesSection = document.getElementById('wishes-display');
-        if (wishesSection) {
-            wishesSection.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-    } catch (error) {
-        console.error("❌ Error agregando deseo a Firebase:", error);
-        console.log('📋 Detalles del error:', error.message);
-        
-        // Fallback a localStorage
-        console.log('🔄 Guardando en localStorage como fallback...');
-        let localWishes = JSON.parse(localStorage.getItem('naviweb_wishes') || '[]');
-        newWish.id = Date.now();
-        localWishes.unshift(newWish);
-        localStorage.setItem('naviweb_wishes', JSON.stringify(localWishes));
-        
-        wishesData = localWishes;
-        displayWishes(wishesData);
-        
-        // Limpiar formulario
-        wishInput.value = '';
-        nameInput.value = '';
-        
-        showNotification('❌ Error con Firebase. Deseo guardado localmente.', 'warning');
-    }
+
+    console.log('📦 Guardando en localStorage...');
+
+    // Guardar en localStorage
+    let localWishes = JSON.parse(localStorage.getItem('naviweb_wishes') || '[]');
+    newWish.id = Date.now();
+    localWishes.unshift(newWish);
+    localStorage.setItem('naviweb_wishes', JSON.stringify(localWishes));
+
+    wishesData = localWishes;
+    displayWishes(wishesData);
+
+    // Limpiar formulario
+    wishInput.value = '';
+    if (nameInput) nameInput.value = '';
+
+    showNotification(`🌟 ¡Tu deseo se guardó! Visible para todos en este dispositivo`, 'success');
+    console.log('🎉 Proceso completado exitosamente');
 }
 
 // Obtener IP del cliente (para estadísticas)
