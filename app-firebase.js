@@ -1,9 +1,10 @@
-// Versión Firebase - Deseos compartidos globalmente
-// Configuración de Firebase
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+// Versión simplificada - Usando localStorage
+// (Firebase imports comentados por ahora)
+// import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+// import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-// Tu configuración de Firebase - VALORES ACTUALIZADOS
+// Configuración de Firebase (comentada por ahora)
+/*
 const firebaseConfig = {
   apiKey: "AIzaSyBt41pgOyliuLmm62Ao2GzQNpdSCoeGEAM",
   authDomain: "naviweb-c101c.firebaseapp.com",
@@ -16,6 +17,7 @@ const firebaseConfig = {
 // Inicializar Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
+*/
 
 // Variables globales
 let userName = '';
@@ -58,7 +60,8 @@ function initializeNaviWebApp() {
     setupCharCounter();
 }
 
-// Cargar deseos desde Firebase
+// Cargar deseos desde Firebase (comentado por ahora)
+/*
 async function loadWishesFromFirebase() {
     console.log('🔥 Intentando cargar deseos desde Firebase...');
     console.log('📍 Proyecto Firebase:', firebaseConfig.projectId);
@@ -96,6 +99,7 @@ async function loadWishesFromFirebase() {
         loadWishesFromLocal(); // Fallback a localStorage
     }
 }
+*/
 
 // Agregar deseo (versión simplificada con localStorage)
 async function addWish() {
