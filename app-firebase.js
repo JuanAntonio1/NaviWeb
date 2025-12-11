@@ -60,29 +60,36 @@ function initializeNaviWebApp() {
 // Cargar deseos desde Firebase
 async function loadWishesFromFirebase() {
     console.log('🔥 Intentando cargar deseos desde Firebase...');
+    console.log('📍 Proyecto Firebase:', firebaseConfig.projectId);
     try {
         const q = query(collection(db, "wishes"), orderBy("timestamp", "desc"));
         console.log('📊 Query creado, obteniendo datos...');
         const querySnapshot = await getDocs(q);
         console.log('📦 Datos obtenidos:', querySnapshot.size, 'documentos');
-        
+
+        if (querySnapshot.size === 0) {
+            console.log('⚠️ No hay deseos en la base de datos');
+        }
+
         const wishes = [];
         querySnapshot.forEach((doc) => {
+            console.log('📄 Documento:', doc.id, doc.data());
             wishes.push({
                 id: doc.id,
                 ...doc.data()
             });
         });
-        
+
         wishesData = wishes;
         displayWishes(wishes);
         updateGlobalStats();
-        
+
         console.log('✅ Deseos cargados exitosamente:', wishes.length);
         showNotification(`✨ ${wishes.length} deseos cargados de nuestra comunidad`, 'success');
-        
+
     } catch (error) {
         console.error("❌ Error cargando deseos:", error);
+        console.error("❌ Detalles del error:", error.code, error.message);
         console.log('🔄 Intentando con localStorage como fallback...');
         showNotification('⚠️ Error conectando con Firebase. Usando modo local.', 'warning');
         loadWishesFromLocal(); // Fallback a localStorage
