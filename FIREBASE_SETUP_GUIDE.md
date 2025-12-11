@@ -32,13 +32,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Permitir lectura a todos
+    // Permitir lectura y escritura a todos para deseos compartidos
     match /wishes/{document} {
-      allow read: if true;
-      allow create: if request.auth == null && 
-                   request.resource.data.keys().hasAll(['name', 'wish', 'timestamp']) &&
-                   request.resource.data.wish is string &&
-                   request.resource.data.wish.size() <= 500;
+      allow read, write: if true;
     }
   }
 }
