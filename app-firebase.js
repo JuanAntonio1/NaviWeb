@@ -248,6 +248,8 @@ function displayWishes(wishes) {
     console.log('📄 HTML generado, asignando al contenedor');
     wishesContainer.innerHTML = html;
     console.log('✅ Deseos mostrados en la página');
+    console.log('📊 Contenedor después de asignar HTML:', wishesContainer.innerHTML.substring(0, 200) + '...');
+}
 }
 
 // Fallback a localStorage si Firebase falla
