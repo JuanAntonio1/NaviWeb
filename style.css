@@ -581,6 +581,23 @@ body {
   box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
 }
 
+.wish-form .wish-name-input {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: var(--spacing-lg);
+  transition: var(--transition-fast);
+}
+
+.wish-form .wish-name-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
 .form-footer {
   display: flex;
   justify-content: space-between;
